@@ -106,10 +106,10 @@ function Evaluation() {
           rules were not written from.
         </p>
       )}
-      {metrics?.mode === 'mock' && (
-        <p className="notice notice-high m-0">
-          <strong>Pipeline test only.</strong> These numbers come from mock transcripts and do not
-          measure real accuracy.
+      {metrics && metrics.partial_clips > 0 && (
+        <p className="notice notice-medium m-0">
+          {metrics.partial_clips} of {metrics.clips} clips ran without Gnani Evon, so these results
+          partly reflect the rule layer alone.
         </p>
       )}
       {metrics && <MetricsTable metrics={metrics} />}

@@ -79,7 +79,6 @@ export interface RulePack {
 }
 
 export interface EvalMetrics {
-  mode: 'mock' | 'real'
   dataset_version: string
   generated_at: string
   clips: number
@@ -91,6 +90,7 @@ export interface EvalMetrics {
   disclosure_accuracy: number | null
   layer_split: { rule: number; llm: number }
   median_latency_sec: number | null
+  partial_clips: number
 }
 
 export interface CheckForm {

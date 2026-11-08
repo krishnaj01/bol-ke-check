@@ -18,8 +18,11 @@ def _clock(seconds: float) -> str:
 
 
 def _timed(flags: list[Flag]) -> list[Flag]:
-    return [flag for flag in sorted(flags, key=lambda f: f.start_sec)
-            if flag.family != "missing_disclosure"]
+    return [
+        flag
+        for flag in sorted(flags, key=lambda f: f.start_sec)
+        if flag.family != "missing_disclosure"
+    ]
 
 
 def build_display(flags: list[Flag], score: int, level: RiskLevel, disclosure: Disclosure) -> str:
@@ -43,9 +46,7 @@ def build_spoken(flags: list[Flag], score: int, level: RiskLevel, disclosure: Di
     if timed:
         start = int(timed[0].start_sec)
         parts.append(f"इस वीडियो में {len(timed)} जगह रिस्क है।")
-        parts.append(
-            f"पहला फ्लैग {start // 60} मिनट {start % 60} सेकंड पर है।"
-        )
+        parts.append(f"पहला फ्लैग {start // 60} मिनट {start % 60} सेकंड पर है।")
     else:
         parts.append("इस वीडियो की बोली हुई लाइनों में कोई रिस्क नहीं मिला।")
     if disclosure.required and not disclosure.found:
@@ -55,17 +56,23 @@ def build_spoken(flags: list[Flag], score: int, level: RiskLevel, disclosure: Di
     return " ".join(parts)
 
 
-async def synthesise(spoken: str, target: Path) -> bool:
+async def cached_speech(text: str, voice: str, language: str = tts.SUMMARY_LANGUAGE) -> bytes:
     settings = get_settings()
-    voice = settings.gnani_tts_voice
-    key = hashlib.sha256(f"{settings.gnani_tts_model}:{voice}:{spoken}".encode()).hexdigest()
+    if settings.gnani_mock:
+        return await tts.speak(text, voice, language)
+    identity = f"{settings.gnani_tts_model}:{voice}:{language}:{text}"
+    key = hashlib.sha256(identity.encode()).hexdigest()
     cache = settings.media_dir / "_tts_cache" / f"{key}.mp3"
+    if not cache.exists():
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        cache.write_bytes(await tts.speak(text, voice, language))
+    return cache.read_bytes()
+
+
+async def synthesise(spoken: str, target: Path) -> bool:
     try:
-        if not cache.exists():
-            cache.parent.mkdir(parents=True, exist_ok=True)
-            cache.write_bytes(await tts.speak(spoken, voice))
+        target.write_bytes(await cached_speech(spoken, get_settings().gnani_tts_voice))
     except GnaniError as error:
         logger.warning("Timbre summary skipped: %s", error)
         return False
-    target.write_bytes(cache.read_bytes())
     return True
