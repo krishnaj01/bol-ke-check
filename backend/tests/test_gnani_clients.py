@@ -142,3 +142,25 @@ def test_llm_api_error_becomes_gnani_error(monkeypatch: pytest.MonkeyPatch, live
     _fake_openai(monkeypatch, create)
     with pytest.raises(GnaniError, match="APIConnectionError"):
         asyncio.run(llm.chat([], {}))
+
+
+def test_gnani_calls_respect_the_concurrency_limit(
+    monkeypatch: pytest.MonkeyPatch, live_settings
+) -> None:
+    active = peak = 0
+
+    async def handler(_: httpx.Request) -> httpx.Response:
+        nonlocal active, peak
+        active += 1
+        peak = max(peak, active)
+        await asyncio.sleep(0.01)
+        active -= 1
+        return httpx.Response(200, json={"success": True, "transcript": "ok"})
+
+    _route(monkeypatch, handler)
+
+    async def run() -> None:
+        await asyncio.gather(*(stt.transcribe(b"WAV", "hi-IN") for _ in range(4)))
+
+    asyncio.run(run())
+    assert peak == live_settings.gnani_max_concurrent == 1

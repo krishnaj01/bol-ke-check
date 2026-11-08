@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     gnani_tts_url: str = ""
     gnani_tts_model: str = "timbre-v2.5"
     gnani_tts_voice: str = "Nalini"
+    gnani_max_concurrent: int = 1
 
     llm_base_url: str = ""
     llm_api_key: str = ""

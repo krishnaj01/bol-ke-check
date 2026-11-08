@@ -22,8 +22,6 @@ from app.models import (
 
 logger = logging.getLogger(__name__)
 
-STT_CONCURRENCY = 4
-
 
 class PipelineError(Exception):
     def __init__(self, code: ErrorCode, detail: str = "") -> None:
@@ -90,17 +88,15 @@ async def transcribe_stage(check: Check, pcm: bytes) -> list[Segment]:
     language = AUDIO_LANGUAGES[check.language]
     cache_scope = f"{language}:{settings.gnani_stt_model}:{settings.gnani_stt_format}"
     keyterms = rules_engine.keyterms_for(check.category) if settings.gnani_stt_keyterms else None
-    gate = asyncio.Semaphore(STT_CONCURRENCY)
 
     async def transcribe_one(index: int, span: audio.Span) -> Segment:
         wav = audio.slice_wav(pcm, span)
         sha = hashlib.sha256(wav).hexdigest()
         text = None if settings.gnani_mock else _cached_transcript(sha, cache_scope)
         if text is None:
-            async with gate:
-                result = await stt.transcribe(
-                    wav, language, keyterms=keyterms, script=check.source_name, index=index
-                )
+            result = await stt.transcribe(
+                wav, language, keyterms=keyterms, script=check.source_name, index=index
+            )
             text = result["text"].strip()
             if not settings.gnani_mock:
                 _store_transcript(sha, cache_scope, text, result["raw"], span[1] - span[0])

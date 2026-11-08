@@ -1,4 +1,6 @@
+import asyncio
 import logging
+from weakref import WeakKeyDictionary
 
 import httpx
 from tenacity import (
@@ -15,6 +17,8 @@ logger = logging.getLogger(__name__)
 
 RETRYABLE_STATUS = {429, 500, 502, 503, 504}
 TIMEOUT_SEC = 60.0
+
+_gates: WeakKeyDictionary[asyncio.AbstractEventLoop, asyncio.Semaphore] = WeakKeyDictionary()
 
 
 def make_client() -> httpx.AsyncClient:
@@ -40,12 +44,20 @@ async def _post(url: str, headers: dict, **kwargs) -> httpx.Response:
     return response
 
 
+def _gate() -> asyncio.Semaphore:
+    loop = asyncio.get_running_loop()
+    if loop not in _gates:
+        _gates[loop] = asyncio.Semaphore(get_settings().gnani_max_concurrent)
+    return _gates[loop]
+
+
 async def post_gnani(url: str, **kwargs) -> httpx.Response:
     api_key = get_settings().gnani_api_key
     if not url or not api_key:
         raise GnaniError("Gnani URL or API key is not configured")
     try:
-        return await _post(url, {"X-API-Key-ID": api_key}, **kwargs)
+        async with _gate():
+            return await _post(url, {"X-API-Key-ID": api_key}, **kwargs)
     except httpx.HTTPStatusError as error:
         status = error.response.status_code
         logger.warning("Gnani returned %s: %s", status, error.response.text[:300])
