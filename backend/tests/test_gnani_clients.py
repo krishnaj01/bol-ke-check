@@ -119,6 +119,7 @@ def test_llm_uses_json_schema_and_zero_temperature(
     }
     assert seen["temperature"] == 0 and seen["max_tokens"] == 1500
     assert seen["response_format"]["type"] == "json_schema"
+    assert seen["extra_body"]["reasoning_effort"] == "none"
 
 
 def test_llm_prose_reply_raises_value_error() -> None:

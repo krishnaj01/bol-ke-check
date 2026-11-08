@@ -1,4 +1,4 @@
-# बोल के चेक · Bol Ke Check
+# Bol Ke Check
 
 Upload a draft reel and get every risky spoken Hinglish claim with its timestamp, the rule it
 breaks and a safer line to say instead, before you post. Built on Gnani Prisma (speech to text),
@@ -58,7 +58,7 @@ Ollama and vLLM do not authenticate by default, so reach them over a private net
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| POST | `/api/v1/check` | Multipart: `file`, `category`, `paid_collab`, `brand`, `speak_summary` |
+| POST | `/api/v1/check` | Multipart: `file`, `category`, `language`, `paid_collab`, `brand`, `speak_summary` |
 | GET | `/api/v1/check/{id}` | The report as JSON |
 | GET | `/api/v1/check/{id}/events` | Server-sent stage progress |
 | POST | `/api/v1/check/{id}/retry` | Re-run a failed check |
@@ -66,6 +66,9 @@ Ollama and vLLM do not authenticate by default, so reach them over a private net
 | GET | `/media/{id}/{file}` | Uploaded media and summary audio |
 
 Categories: `personal_care`, `food`, `finance`, `health`, `betting`, `general`.
+`language` is the language spoken in the reel: `hi-IN` (default), `en-IN` or `auto`. It is
+independent of the website language.
+
 Limits: 100 MB, 180 seconds, mp4/mov/webm/mp3/wav/m4a.
 
 ## Evaluation

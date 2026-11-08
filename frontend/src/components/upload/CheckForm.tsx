@@ -1,26 +1,30 @@
 import { FileAudio, UploadCloud, X } from 'lucide-react'
 import { useState } from 'react'
 import type { DragEvent } from 'react'
-import { ACCEPTED_EXTENSIONS, CATEGORIES, MAX_UPLOAD_MB } from '../../lib/constants'
+import { useTranslation } from 'react-i18next'
+import { ACCEPTED_EXTENSIONS, AUDIO_LANGUAGES, CATEGORIES, MAX_UPLOAD_MB } from '../../lib/constants'
 import { useUploadStore } from '../../stores/upload'
-import { Hi, Switch } from '../ui'
-
-function validateFile(file: File): string | null {
-  const name = file.name.toLowerCase()
-  if (!ACCEPTED_EXTENSIONS.some((extension) => name.endsWith(extension))) {
-    return 'Please use MP4, MOV, WEBM, MP3, WAV or M4A.'
-  }
-  if (file.size > MAX_UPLOAD_MB * 1024 * 1024) return `File is over ${MAX_UPLOAD_MB} MB.`
-  return null
-}
+import { Segmented, Switch } from '../ui'
 
 function DropZone({ onError }: { onError: (message: string | null) => void }) {
+  const { t } = useTranslation()
   const [dragging, setDragging] = useState(false)
   const { file, setFile } = useUploadStore()
 
+  function problemWith(candidate: File): string | null {
+    const name = candidate.name.toLowerCase()
+    if (!ACCEPTED_EXTENSIONS.some((extension) => name.endsWith(extension))) {
+      return t('form.badType')
+    }
+    if (candidate.size > MAX_UPLOAD_MB * 1024 * 1024) {
+      return t('form.tooBig', { mb: MAX_UPLOAD_MB })
+    }
+    return null
+  }
+
   function accept(candidate: File | undefined) {
     if (!candidate) return
-    const problem = validateFile(candidate)
+    const problem = problemWith(candidate)
     onError(problem)
     setFile(problem ? null : candidate)
   }
@@ -34,10 +38,10 @@ function DropZone({ onError }: { onError: (message: string | null) => void }) {
   if (file) {
     return (
       <div className="dropzone dropzone-filled">
-        <FileAudio size={24} className="text-accent-ink" />
+        <FileAudio size={22} className="text-accent-text" />
         <p className="m-0 max-w-full truncate font-semibold">{file.name}</p>
         <button type="button" className="btn" onClick={() => setFile(null)}>
-          <X size={14} /> Remove
+          <X size={14} /> {t('form.remove')}
         </button>
       </div>
     )
@@ -54,12 +58,10 @@ function DropZone({ onError }: { onError: (message: string | null) => void }) {
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
     >
-      <UploadCloud size={28} className="text-accent-ink" />
-      <span className="text-lg font-semibold">
-        <Hi>अपनी रील यहाँ डालें</Hi>
-      </span>
-      <span className="text-sm text-ink-soft">Drop your draft reel, or tap to choose</span>
-      <span className="text-xs text-ink-faint">Up to 3 minutes · {MAX_UPLOAD_MB} MB</span>
+      <UploadCloud size={26} className="text-accent-text" />
+      <span className="font-semibold">{t('form.dropTitle')}</span>
+      <span className="text-sm text-ink-soft">{t('form.dropHint')}</span>
+      <span className="text-xs text-ink-faint">{t('form.dropLimits', { mb: MAX_UPLOAD_MB })}</span>
       <input
         type="file"
         className="sr-only"
@@ -67,6 +69,28 @@ function DropZone({ onError }: { onError: (message: string | null) => void }) {
         onChange={(event) => accept(event.target.files?.[0])}
       />
     </label>
+  )
+}
+
+function ToggleRow({
+  title,
+  hint,
+  checked,
+  onChange,
+}: {
+  title: string
+  hint: string
+  checked: boolean
+  onChange: (value: boolean) => void
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <span>
+        <span className="block text-sm font-semibold">{title}</span>
+        <span className="block text-xs text-ink-faint">{hint}</span>
+      </span>
+      <Switch checked={checked} onChange={onChange} label={title} />
+    </div>
   )
 }
 
@@ -81,6 +105,7 @@ export function CheckForm({
   error: string | null
   onError: (message: string | null) => void
 }) {
+  const { t } = useTranslation()
   const state = useUploadStore()
   return (
     <form
@@ -92,60 +117,62 @@ export function CheckForm({
     >
       <DropZone onError={onError} />
 
+      <div>
+        <p className="eyebrow m-0 mb-2">{t('form.audioLanguage')}</p>
+        <Segmented
+          block
+          label={t('form.audioLanguage')}
+          value={state.audioLanguage}
+          onChange={state.setAudioLanguage}
+          options={AUDIO_LANGUAGES.map((value) => ({
+            value,
+            label: t(`audioLanguage.${value}`),
+          }))}
+        />
+        <p className="m-0 mt-1.5 text-xs text-ink-faint">{t('form.audioLanguageHint')}</p>
+      </div>
+
       <fieldset className="m-0 border-0 p-0">
-        <legend className="eyebrow mb-2 p-0">Category</legend>
+        <legend className="eyebrow mb-2 p-0">{t('form.category')}</legend>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {CATEGORIES.map((category) => (
             <button
-              key={category.id}
+              key={category}
               type="button"
               className="chip"
-              aria-pressed={state.category === category.id}
-              onClick={() => state.setCategory(category.id)}
+              aria-pressed={state.category === category}
+              onClick={() => state.setCategory(category)}
             >
-              {category.label}
-              <small lang="hi">{category.hindi}</small>
+              {t(`category.${category}`)}
             </button>
           ))}
         </div>
       </fieldset>
 
-      <div className="flex items-center justify-between gap-4">
-        <span>
-          <span className="block font-semibold">This is a paid collaboration</span>
-          <span className="block text-sm text-ink-faint">
-            We then check that the ad is disclosed out loud
-          </span>
-        </span>
-        <Switch
-          checked={state.paidCollab}
-          onChange={state.setPaidCollab}
-          label="This is a paid collaboration"
-        />
-      </div>
+      <ToggleRow
+        title={t('form.paidTitle')}
+        hint={t('form.paidHint')}
+        checked={state.paidCollab}
+        onChange={state.setPaidCollab}
+      />
 
       {state.paidCollab && (
         <input
           className="field"
-          placeholder="Brand name (optional)"
-          aria-label="Brand name"
+          placeholder={t('form.brandPlaceholder')}
+          aria-label={t('form.brandPlaceholder')}
           maxLength={120}
           value={state.brand}
           onChange={(event) => state.setBrand(event.target.value)}
         />
       )}
 
-      <div className="flex items-center justify-between gap-4">
-        <span>
-          <span className="block font-semibold">Speak the summary in Hindi</span>
-          <span className="block text-sm text-ink-faint">Read aloud by Gnani Timbre</span>
-        </span>
-        <Switch
-          checked={state.speakSummary}
-          onChange={state.setSpeakSummary}
-          label="Speak the summary in Hindi"
-        />
-      </div>
+      <ToggleRow
+        title={t('form.summaryTitle')}
+        hint={t('form.summaryHint')}
+        checked={state.speakSummary}
+        onChange={state.setSpeakSummary}
+      />
 
       {error && (
         <p role="alert" className="notice notice-high m-0">
@@ -154,7 +181,7 @@ export function CheckForm({
       )}
 
       <button type="submit" className="btn btn-primary" disabled={!state.file || busy}>
-        {busy ? 'Uploading…' : <Hi>बोल के चेक करो</Hi>}
+        {busy ? t('form.uploading') : t('form.submit')}
       </button>
     </form>
   )

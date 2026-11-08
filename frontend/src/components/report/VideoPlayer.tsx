@@ -1,10 +1,11 @@
 import { Pause, Play } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { Flag } from '../../api/types'
-import { SEVERITY_LABEL } from '../../lib/constants'
 import { formatClock } from '../../lib/format'
+import { markerFlags } from '../../lib/highlight'
 import { usePlayerStore } from '../../stores/player'
-import { Hi, Wave } from '../ui'
+import { Wave } from '../ui'
 
 const AUDIO_EXTENSIONS = /\.(mp3|wav|m4a)$/i
 
@@ -17,6 +18,7 @@ export function VideoPlayer({
   duration: number
   flags: Flag[]
 }) {
+  const { t } = useTranslation()
   const videoRef = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(false)
   const currentTime = usePlayerStore((state) => state.currentTime)
@@ -59,10 +61,8 @@ export function VideoPlayer({
         {audioOnly && <Wave bars={12} live={playing} />}
         {liveFlag && (
           <div className="absolute inset-x-3 bottom-3" aria-live="polite">
-            <div className={`notice notice-${liveFlag.severity === 'low' ? 'neutral' : liveFlag.severity}`}>
-              <strong>
-                <Hi>{SEVERITY_LABEL[liveFlag.severity].hindi}</Hi> · {liveFlag.title}
-              </strong>
+            <div className="player-flag" data-severity={liveFlag.severity}>
+              {liveFlag.title}
             </div>
           </div>
         )}
@@ -72,7 +72,7 @@ export function VideoPlayer({
           type="button"
           className="btn btn-icon btn-on-player"
           onClick={togglePlay}
-          aria-label={playing ? 'Pause' : 'Play'}
+          aria-label={playing ? t('report.pause') : t('report.play')}
         >
           {playing ? <Pause size={18} /> : <Play size={18} />}
         </button>
@@ -83,23 +83,26 @@ export function VideoPlayer({
             max={duration || 1}
             step={0.1}
             value={currentTime}
-            aria-label="Seek"
+            aria-label={t('report.seek')}
             onChange={(event) => seek(Number(event.target.value))}
           />
-          {flags.map((flag) => (
+          {markerFlags(flags).map((flag) => (
             <button
               key={flag.id}
               type="button"
               className="scrubber-marker"
               data-severity={flag.severity}
               style={{ left: `${(flag.start_sec / (duration || 1)) * 100}%` }}
-              aria-label={`Jump to ${flag.title} at ${formatClock(flag.start_sec)}`}
+              aria-label={t('report.jump', {
+                title: flag.title,
+                time: formatClock(flag.start_sec),
+              })}
               title={flag.title}
               onClick={() => seek(flag.start_sec)}
             />
           ))}
         </div>
-        <span className="mono-time">
+        <span className="time">
           {formatClock(currentTime)} / {formatClock(duration)}
         </span>
       </div>

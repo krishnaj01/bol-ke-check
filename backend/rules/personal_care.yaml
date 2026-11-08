@@ -8,7 +8,7 @@ rules:
     patterns:
       - "g[ua]+r[ae]?nt[iy]d? (result|glow|fark|asar|fayda|effect)"
       - "\\b(result|glow|fark|asar) (ki )?g[ua]+r[ae]?nt[iy]"
-      - "100 ?(%|percent|pratishat)? ?(result|effect|asar)"
+      - "(100|ek sau|sau) ?(%|percent|pratishat)? ?(result|effect|asar)"
       - "pakka (result|fark|asar|glow)"
       - "गारंटी"
     explanation: Absolute outcome claims need substantiation, and results differ between people.

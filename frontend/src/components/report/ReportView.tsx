@@ -1,15 +1,15 @@
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { mediaUrl } from '../../api/client'
 import type { Report } from '../../api/types'
-import { SCORE_FORMULA } from '../../lib/constants'
 import { usePlayerStore } from '../../stores/player'
 import { FlagCard } from './FlagCard'
 import { ReportHeader } from './ReportHeader'
 import { Transcript } from './Transcript'
 import { VideoPlayer } from './VideoPlayer'
-import { Hi } from '../ui'
 
 export function ReportView({ report }: { report: Report }) {
+  const { t } = useTranslation()
   const reset = usePlayerStore((state) => state.reset)
 
   useEffect(() => reset, [reset])
@@ -18,8 +18,7 @@ export function ReportView({ report }: { report: Report }) {
     <div className="flex flex-col gap-6">
       {report.status === 'partial' && (
         <p className="notice notice-medium m-0">
-          <strong>Partial report.</strong> Gnani Evon could not review this transcript, so only the
-          rule layer ran. Subtler claims may be missing.
+          <strong>{t('report.partial')}</strong> {t('report.partialBody')}
         </p>
       )}
 
@@ -37,16 +36,13 @@ export function ReportView({ report }: { report: Report }) {
       </div>
 
       <section className="flex flex-col gap-3">
-        <h2 className="display text-xl">
-          <Hi>ध्यान देने वाली बातें</Hi>{' '}
-          <span className="mono-time text-ink-faint">({report.flags.length})</span>
+        <h2 className="text-xl">
+          {t('report.flags')} <span className="text-ink-faint">({report.flags.length})</span>
         </h2>
         {report.flags.length === 0 ? (
           <div className="card p-6 text-center">
-            <p className="display m-0 text-xl" lang="hi">
-              सब साफ़ है
-            </p>
-            <p className="m-0 text-sm text-ink-soft">No risky spoken lines were found.</p>
+            <p className="m-0 text-xl font-semibold">{t('report.clean')}</p>
+            <p className="m-0 text-sm text-ink-soft">{t('report.cleanBody')}</p>
           </div>
         ) : (
           <div className="grid gap-3 lg:grid-cols-2">
@@ -57,10 +53,9 @@ export function ReportView({ report }: { report: Report }) {
         )}
       </section>
 
-      <footer className="border-t border-line pt-4 text-sm text-ink-soft">
-        <p className="m-0 font-semibold">{report.disclaimer}</p>
-        <p className="m-0 mt-1">{SCORE_FORMULA}</p>
-      </footer>
+      <p className="m-0 border-t border-line pt-4 text-xs text-ink-faint">
+        <strong>{t('report.disclaimer')}</strong> {t('report.formula')}
+      </p>
     </div>
   )
 }

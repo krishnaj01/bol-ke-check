@@ -1,11 +1,3 @@
-@import '@fontsource/rozha-one/400.css';
-@import '@fontsource-variable/anek-latin/wdth.css';
+@import '@fontsource-variable/bricolage-grotesque/index.css';
+@import '@fontsource-variable/figtree/index.css';
 @import '@fontsource-variable/anek-devanagari/wdth.css';
-@import '@fontsource-variable/anek-bangla/wdth.css';
-@import '@fontsource-variable/anek-tamil/wdth.css';
-@import '@fontsource-variable/anek-telugu/wdth.css';
-@import '@fontsource-variable/anek-kannada/wdth.css';
-@import '@fontsource-variable/anek-gujarati/wdth.css';
-@import '@fontsource-variable/anek-gurmukhi/wdth.css';
-@import '@fontsource-variable/anek-malayalam/wdth.css';
-@import '@fontsource-variable/martian-mono/index.css';

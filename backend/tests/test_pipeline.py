@@ -215,3 +215,33 @@ def test_retry_requires_failed_check(client: TestClient, speech_wav: Path, tmp_p
     write_wav(silent, b"\x00" * 16000 * 2 * 3)
     failed = _upload(client, silent, "s.wav")
     assert client.post(f"/api/v1/check/{failed['check_id']}/retry").status_code == 202
+
+
+@pytest.mark.parametrize(
+    ("choice", "prisma_code"),
+    [("hi-IN", "hi-IN"), ("en-IN", "en-IN"), ("auto", "hi-IN,en-IN")],
+)
+def test_audio_language_reaches_prisma(
+    client: TestClient, speech_wav: Path, monkeypatch: pytest.MonkeyPatch, choice: str, prisma_code: str
+) -> None:
+    from app.gnani import stt
+
+    seen: list[str] = []
+    real = stt.transcribe
+
+    async def spy(wav: bytes, language: str, **kwargs) -> dict:
+        seen.append(language)
+        return await real(wav, language, **kwargs)
+
+    monkeypatch.setattr(stt, "transcribe", spy)
+    report = _upload(client, speech_wav, "a.wav", language=choice)
+    assert set(seen) == {prisma_code} and report["language"] == choice
+
+
+def test_unknown_audio_language_is_rejected(client: TestClient, speech_wav: Path) -> None:
+    response = client.post(
+        "/api/v1/check",
+        files={"file": ("a.wav", speech_wav.read_bytes(), "audio/wav")},
+        data={"language": "ta-IN"},
+    )
+    assert response.status_code == 422

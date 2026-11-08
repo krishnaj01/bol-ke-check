@@ -21,7 +21,7 @@ rules:
     severity: medium
     layer: rule
     patterns:
-      - "100 ?(%|percent|pratishat)? ?(natural|pure|shudh|organic)"
+      - "(100|ek sau|sau) ?(%|percent|pratishat)? ?(natural|pure|shudh|organic)"
       - "\\bbilkul shudh\\b"
     explanation: Absolute purity or natural claims need proof from the brand.
     suggested_fix: Quote only what the brand's label states.

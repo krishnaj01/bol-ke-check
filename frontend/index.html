@@ -11,11 +11,11 @@
     <title>Bol Ke Check</title>
     <script>
       try {
-        var saved = JSON.parse(localStorage.getItem('bkc-theme') || '{}').state
+        var saved = JSON.parse(localStorage.getItem('bkc-ui-theme') || '{}').state
         var dark = matchMedia('(prefers-color-scheme: dark)').matches
-        document.documentElement.dataset.theme = (saved && saved.theme) || (dark ? 'raat' : 'din')
+        document.documentElement.dataset.theme = (saved && saved.theme) || (dark ? 'dark' : 'light')
       } catch (e) {
-        document.documentElement.dataset.theme = 'din'
+        document.documentElement.dataset.theme = 'light'
       }
     </script>
   </head>

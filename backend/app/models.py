@@ -12,6 +12,9 @@ Status = Literal["queued", "transcribing", "reviewing", "complete", "partial", "
 Stage = Literal["queued", "extract", "transcribe", "rules", "review", "summary", "done"]
 ErrorCode = Literal["no_speech", "too_long", "bad_media", "gnani_failed", "internal"]
 
+# UI values mapped to Prisma language_code. "auto" hints the two languages the rules cover.
+AUDIO_LANGUAGES = {"hi-IN": "hi-IN", "en-IN": "en-IN", "auto": "hi-IN,en-IN"}
+
 CATEGORIES = ("personal_care", "food", "finance", "health", "betting", "general")
 TERMINAL_STATUSES = ("complete", "partial", "failed")
 DISCLAIMER = "Automated pre-check, not legal advice."
@@ -25,6 +28,7 @@ class Check(SQLModel, table=True):
     id: str = Field(primary_key=True)
     created_at: datetime = Field(default_factory=utcnow)
     category: str
+    language: str = "hi-IN"
     paid_collab: bool = False
     brand: str | None = None
     speak_summary: bool = False
@@ -91,6 +95,7 @@ class Disclosure(BaseModel):
 class Report(BaseModel):
     check_id: str
     category: str
+    language: str = "hi-IN"
     risk_score: int | None = None
     risk_level: RiskLevel | None = None
     duration_sec: float | None = None

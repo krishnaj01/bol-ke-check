@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { Flag, Segment } from '../../api/types'
 import { formatClock } from '../../lib/format'
 import { flagsInSegment, highlightParts } from '../../lib/highlight'
 import { usePlayerStore } from '../../stores/player'
-import { Hi } from '../ui'
 
 export function Transcript({ segments, flags }: { segments: Segment[]; flags: Flag[] }) {
+  const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
   const seek = usePlayerStore((state) => state.seek)
   const activeId = usePlayerStore(
@@ -26,10 +27,8 @@ export function Transcript({ segments, flags }: { segments: Segment[]; flags: Fl
   return (
     <section className="card flex flex-col overflow-hidden">
       <header className="border-b border-line px-4 py-3">
-        <h2 className="text-base font-semibold">
-          <Hi>जो बोला गया</Hi> · Transcript
-        </h2>
-        <p className="eyebrow m-0">Heard by Gnani Prisma</p>
+        <h2 className="text-lg">{t('report.transcript')}</h2>
+        <p className="m-0 text-xs text-ink-faint">{t('report.heardBy')}</p>
       </header>
       <div ref={containerRef} className="transcript relative py-1">
         {segments.map((segment) => (
@@ -40,7 +39,7 @@ export function Transcript({ segments, flags }: { segments: Segment[]; flags: Fl
             data-active={segment.id === activeId}
             onClick={() => seek(segment.start_sec)}
           >
-            <span className="mono-time pt-1">{formatClock(segment.start_sec)}</span>
+            <span className="time pt-0.5">{formatClock(segment.start_sec)}</span>
             <span>
               {highlightParts(segment.text, flagsInSegment(segment, flags)).map((part, index) =>
                 part.severity ? (

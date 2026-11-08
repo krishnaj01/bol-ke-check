@@ -26,6 +26,7 @@ export function createCheck(form: CheckForm): Promise<{ check_id: string }> {
   const body = new FormData()
   body.append('file', form.file)
   body.append('category', form.category)
+  body.append('language', form.audioLanguage)
   body.append('paid_collab', String(form.paidCollab))
   body.append('speak_summary', String(form.speakSummary))
   if (form.brand.trim()) body.append('brand', form.brand.trim())

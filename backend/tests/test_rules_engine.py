@@ -48,6 +48,8 @@ def test_roman_spelling_variants_fold_together() -> None:
         ("सात दिन में glow मिलेगा", "personal_care", "guaranteed_results"),
         ("is cream ki गारंटी है", "personal_care", "guaranteed_results"),
         ("100% result milega", "personal_care", "guaranteed_results"),
+        ("ye ek sau percent result deta hai", "personal_care", "guaranteed_results"),
+        ("यह एक सौ percent result देता है", "personal_care", "guaranteed_results"),
         ("pakka fark dikhega", "personal_care", "guaranteed_results"),
         ("is stock mein paisa double pakka", "finance", "assured_returns"),
         ("पैसा डबल हो जाएगा", "finance", "assured_returns"),

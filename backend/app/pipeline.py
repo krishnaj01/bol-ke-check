@@ -10,7 +10,15 @@ from app import audio, review, rules_engine, scoring, summary
 from app.config import get_settings
 from app.db import engine
 from app.gnani import GnaniError, stt
-from app.models import Check, ErrorCode, Report, Segment, TranscriptCache, UsageCounter
+from app.models import (
+    AUDIO_LANGUAGES,
+    Check,
+    ErrorCode,
+    Report,
+    Segment,
+    TranscriptCache,
+    UsageCounter,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +87,7 @@ async def transcribe_stage(check: Check, pcm: bytes) -> list[Segment]:
     spans = await asyncio.to_thread(audio.speech_segments, pcm)
     if not spans:
         raise PipelineError("no_speech")
-    language = settings.gnani_stt_language
+    language = AUDIO_LANGUAGES[check.language]
     cache_scope = f"{language}:{settings.gnani_stt_model}:{settings.gnani_stt_format}"
     keyterms = rules_engine.keyterms_for(check.category) if settings.gnani_stt_keyterms else None
     gate = asyncio.Semaphore(STT_CONCURRENCY)
@@ -139,6 +147,7 @@ async def _execute(check_id: str) -> None:
     report = Report(
         check_id=check_id,
         category=check.category,
+        language=check.language,
         risk_score=score,
         risk_level=level,
         duration_sec=duration,

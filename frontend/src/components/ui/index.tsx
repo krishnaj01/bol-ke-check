@@ -1,8 +1,6 @@
-import type { CSSProperties, ReactNode } from 'react'
-import { SEVERITY_LABEL } from '../../lib/constants'
+import type { CSSProperties } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { Severity } from '../../api/types'
-
-export const Hi = ({ children }: { children: ReactNode }) => <span lang="hi">{children}</span>
 
 export function Switch({
   checked,
@@ -26,12 +24,8 @@ export function Switch({
 }
 
 export function SeverityBadge({ severity }: { severity: Severity }) {
-  const { label, hindi } = SEVERITY_LABEL[severity]
-  return (
-    <span className={`badge badge-${severity}`}>
-      <Hi>{hindi}</Hi> · {label}
-    </span>
-  )
+  const { t } = useTranslation()
+  return <span className={`badge badge-${severity}`}>{t(`severity.${severity}`)}</span>
 }
 
 const BARS = [0.35, 0.7, 1, 0.55, 0.85, 0.4, 0.95, 0.6, 0.3, 0.75, 0.5, 0.9]
@@ -43,5 +37,35 @@ export function Wave({ bars = 6, live = false }: { bars?: number; live?: boolean
         <i key={index} style={{ '--bar': height, '--i': index } as CSSProperties} />
       ))}
     </span>
+  )
+}
+
+export function Segmented<T extends string>({
+  options,
+  value,
+  onChange,
+  label,
+  block = false,
+}: {
+  options: { value: T; label: string; lang?: string }[]
+  value: T
+  onChange: (value: T) => void
+  label: string
+  block?: boolean
+}) {
+  return (
+    <div role="group" aria-label={label} className={`segmented ${block ? 'segmented-block' : ''}`}>
+      {options.map((option) => (
+        <button
+          key={option.value}
+          type="button"
+          lang={option.lang}
+          aria-pressed={value === option.value}
+          onClick={() => onChange(option.value)}
+        >
+          {option.label}
+        </button>
+      ))}
+    </div>
   )
 }

@@ -44,8 +44,12 @@ async def chat(messages: list[dict], json_schema: dict) -> dict:
                 "type": "json_schema",
                 "json_schema": {"name": "review", "schema": json_schema},
             },
-            # Evon's chat template spends output tokens on a reasoning trace unless disabled.
-            extra_body={"chat_template_kwargs": {"enable_thinking": False}},
+            # Evon spends output tokens on a reasoning trace unless disabled: vLLM reads the
+            # template kwarg, Ollama reads reasoning_effort.
+            extra_body={
+                "chat_template_kwargs": {"enable_thinking": False},
+                "reasoning_effort": "none",
+            },
         )
     except openai.OpenAIError as error:
         raise GnaniError(f"LLM call failed: {type(error).__name__}") from error

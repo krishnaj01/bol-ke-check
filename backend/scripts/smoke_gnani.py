@@ -27,7 +27,7 @@ async def main() -> int:
             mp3.write_bytes(await tts.speak(LINE, settings.gnani_tts_voice))
             print(f"Timbre OK: {mp3.stat().st_size} bytes of MP3")
             await asyncio.to_thread(audio.extract_wav, mp3, wav)
-            result = await stt.transcribe(wav.read_bytes(), settings.gnani_stt_language)
+            result = await stt.transcribe(wav.read_bytes(), "hi-IN")
         except GnaniError as error:
             print(f"FAILED: {error}")
             return 1

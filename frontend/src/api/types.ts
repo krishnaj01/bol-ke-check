@@ -3,6 +3,7 @@ export type RiskLevel = 'low' | 'medium' | 'high'
 export type Status = 'queued' | 'transcribing' | 'reviewing' | 'complete' | 'partial' | 'failed'
 export type Stage = 'queued' | 'extract' | 'transcribe' | 'rules' | 'review' | 'summary' | 'done'
 export type ErrorCode = 'no_speech' | 'too_long' | 'bad_media' | 'gnani_failed' | 'internal'
+export type AudioLanguage = 'hi-IN' | 'en-IN' | 'auto'
 export type Category = 'personal_care' | 'food' | 'finance' | 'health' | 'betting' | 'general'
 
 export interface Segment {
@@ -38,6 +39,7 @@ export interface Disclosure {
 export interface Report {
   check_id: string
   category: Category
+  language: AudioLanguage
   risk_score: number | null
   risk_level: RiskLevel | null
   duration_sec: number | null
@@ -96,6 +98,7 @@ export interface EvalMetrics {
 export interface CheckForm {
   file: File
   category: Category
+  audioLanguage: AudioLanguage
   paidCollab: boolean
   brand: string
   speakSummary: boolean

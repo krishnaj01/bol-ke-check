@@ -13,7 +13,6 @@ class Settings(BaseSettings):
     gnani_api_key: str = ""
     gnani_stt_url: str = ""
     gnani_stt_model: str = "prisma-v3.0"
-    gnani_stt_language: str = "hi-IN"
     gnani_stt_format: str = "codemix"
     gnani_stt_keyterms: bool = False
     gnani_tts_url: str = ""

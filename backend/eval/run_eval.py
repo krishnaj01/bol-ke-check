@@ -80,6 +80,7 @@ async def evaluate_clip(row: dict) -> ClipResult:
             Check(
                 id=check_id,
                 category=row["category"],
+                language=row.get("language", "hi-IN"),
                 paid_collab=row["paid_collab"],
                 source_name=row["clip_id"],
                 input_file=input_file,

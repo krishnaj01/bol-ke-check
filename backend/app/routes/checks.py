@@ -12,7 +12,7 @@ from ulid import ULID
 
 from app.config import get_settings
 from app.db import engine, get_session
-from app.models import CATEGORIES, TERMINAL_STATUSES, Check, Report, UsageCounter
+from app.models import AUDIO_LANGUAGES, CATEGORIES, TERMINAL_STATUSES, Check, Report, UsageCounter
 from app.pipeline import run_check
 
 router = APIRouter(prefix="/api/v1/check", tags=["check"])
@@ -58,6 +58,7 @@ async def create_check(
     session: SessionDep,
     file: Annotated[UploadFile, File()],
     category: Annotated[str, Form()] = "general",
+    language: Annotated[str, Form()] = "hi-IN",
     paid_collab: Annotated[bool, Form()] = False,
     brand: Annotated[str | None, Form(max_length=120)] = None,
     speak_summary: Annotated[bool, Form()] = False,
@@ -65,6 +66,8 @@ async def create_check(
     settings = get_settings()
     if category not in CATEGORIES:
         raise HTTPException(status_code=422, detail=f"category must be one of {CATEGORIES}")
+    if language not in AUDIO_LANGUAGES:
+        raise HTTPException(status_code=422, detail=f"language must be one of {tuple(AUDIO_LANGUAGES)}")
     name = Path(file.filename or "").name
     extension = Path(name).suffix.lower()
     if extension not in ALLOWED_EXTENSIONS:
@@ -81,6 +84,7 @@ async def create_check(
         Check(
             id=check_id,
             category=category,
+            language=language,
             paid_collab=paid_collab,
             brand=(brand or "").strip() or None,
             speak_summary=speak_summary,
@@ -114,6 +118,7 @@ def get_check(check_id: str, session: SessionDep) -> Report:
     return Report(
         check_id=check.id,
         category=check.category,
+        language=check.language,
         status=check.status,
         stage=check.stage,
         error=check.error,

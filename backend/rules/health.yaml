@@ -23,7 +23,7 @@ rules:
     patterns:
       - "\\b(\\d+|ek|do|teen|char|panch|chhe|sat|aath|das|pandrah) (din|hafte|mahine) me(in)? .{0,40}(wajan|weight|kg|kilo|motapa|energy|thik|theek)"
       - "g[ua]+r[ae]?nt[iy]d? (cure|ilaj|fayda|result|weight)"
-      - "100 ?(%|percent|pratishat)? ?(cure|ilaj|fayda|result)"
+      - "(100|ek sau|sau) ?(%|percent|pratishat)? ?(cure|ilaj|fayda|result)"
       - "गारंटी"
     explanation: Health outcomes vary and need substantiation before they can be promised.
     suggested_fix: Describe your own routine, and say that results vary from person to person.

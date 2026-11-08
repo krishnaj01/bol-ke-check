@@ -1,95 +1,88 @@
 /* Design tokens. Components use these names only; colours are never set anywhere else. */
 
 :root {
-  --font-display: 'Rozha One', 'Anek Devanagari Variable', serif;
-  --font-body: 'Anek Latin Variable', 'Anek Devanagari Variable', system-ui, sans-serif;
-  --font-hindi: 'Anek Devanagari Variable', 'Anek Latin Variable', sans-serif;
-  --font-mono: 'Martian Mono Variable', ui-monospace, monospace;
+  --font-heading: 'Bricolage Grotesque Variable', 'Anek Devanagari Variable', system-ui, sans-serif;
+  --font-body: 'Figtree Variable', 'Anek Devanagari Variable', system-ui, sans-serif;
 
-  --text-2xs: 0.6875rem;
+  --text-2xs: 0.75rem;
   --text-xs: 0.8125rem;
   --text-sm: 0.9375rem;
-  --text-base: 1.0625rem;
-  --text-lg: 1.25rem;
-  --text-xl: 1.625rem;
-  --text-2xl: 2.25rem;
-  --text-hero: clamp(3.5rem, 11vw, 7.5rem);
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: clamp(1.75rem, 3vw, 2.25rem);
+  --text-hero: clamp(2.75rem, 6vw, 4.75rem);
 
-  --radius-sm: 0.375rem;
+  --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
-  --radius-lg: 1.25rem;
+  --radius-lg: 1.125rem;
   --radius-pill: 999px;
 
-  --page-gutter: clamp(1rem, 4vw, 2.5rem);
-  --page-max: 80rem;
+  --page-gutter: clamp(1rem, 4vw, 2rem);
+  --page-max: 76rem;
+  --header-height: 4rem;
 
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
   --duration-fast: 140ms;
   --duration-slow: 900ms;
 
-  /* दिन: chalk paper, indigo ink */
-  --bg: #f6f7fb;
-  --bg-glow: #e7e9fb;
+  --lime: #c6f135;
+  --plum: #2a1a3d;
+
+  --bg: #faf8fc;
   --surface: #ffffff;
-  --surface-sunken: #eef0f8;
-  --line: #dcdfee;
-  --line-strong: #b9bed8;
-  --ink: #16163a;
-  --ink-soft: #4a4c72;
-  --ink-faint: #6d7096;
-  --accent: #f5a623;
-  --accent-strong: #e08e00;
-  --accent-ink: #8f5600;
-  --accent-soft: #fdf0d6;
-  --on-accent: #1d1400;
-  --neel: #2b2e83;
-  --neel-soft: #e4e5f8;
-  --risk-high: #c9262b;
-  --risk-high-soft: #fbe3e3;
-  --risk-medium: #a96400;
-  --risk-medium-soft: #fcefd9;
-  --risk-low: #087f7f;
-  --risk-low-soft: #d9f2f1;
-  --mark-high: #f9cfcf;
-  --mark-medium: #fbe2b5;
-  --mark-low: #bfe9e6;
-  --player-bg: #16163a;
-  --player-ink: #f6f7fb;
-  --player-line: #3a3b6e;
-  --shadow-card: 0 1px 2px rgb(22 22 58 / 6%), 0 12px 32px -16px rgb(22 22 58 / 18%);
+  --surface-sunken: #f3eff7;
+  --line: #e6e0ec;
+  --line-strong: #cbc2d6;
+  --ink: #1c1426;
+  --ink-soft: #544a62;
+  --ink-faint: #6f6580;
+  --accent: #5b2a86;
+  --accent-hover: #47206a;
+  --accent-text: #5b2a86;
+  --on-accent: #ffffff;
+  --accent-soft: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  --risk-high: #c8242f;
+  --risk-medium: #975600;
+  --risk-low: #12794b;
+  --risk-high-soft: color-mix(in srgb, var(--risk-high) 11%, var(--surface));
+  --risk-medium-soft: color-mix(in srgb, var(--risk-medium) 12%, var(--surface));
+  --risk-low-soft: color-mix(in srgb, var(--risk-low) 11%, var(--surface));
+  --mark-high: color-mix(in srgb, var(--risk-high) 22%, var(--surface));
+  --mark-medium: color-mix(in srgb, var(--risk-medium) 24%, var(--surface));
+  --mark-low: color-mix(in srgb, var(--risk-low) 22%, var(--surface));
+  --header-bg: color-mix(in srgb, var(--bg) 86%, transparent);
+  --player-bg: #160f1f;
+  --player-ink: #f4f0f8;
+  --player-line: #3a2d4a;
+  --shadow-card: 0 1px 2px rgb(28 20 38 / 5%), 0 10px 28px -18px rgb(28 20 38 / 22%);
   color-scheme: light;
 }
 
-[data-theme='raat'] {
-  /* रात: neel dye, marigold light */
-  --bg: #12122b;
-  --bg-glow: #23245a;
-  --surface: #1b1c3e;
-  --surface-sunken: #161735;
-  --line: #2f3160;
-  --line-strong: #474a85;
-  --ink: #f2f2fb;
-  --ink-soft: #bfc1e0;
-  --ink-faint: #9496bf;
-  --accent: #f5a623;
-  --accent-strong: #ffbd4d;
-  --accent-ink: #ffc25c;
-  --accent-soft: #3a2f2a;
-  --on-accent: #1d1400;
-  --neel: #a9acf5;
-  --neel-soft: #2a2c62;
-  --risk-high: #ff7a7c;
-  --risk-high-soft: #47202f;
-  --risk-medium: #ffbd4d;
-  --risk-medium-soft: #43331f;
-  --risk-low: #4fd1cf;
-  --risk-low-soft: #173d47;
-  --mark-high: #6b2536;
-  --mark-medium: #63461d;
-  --mark-low: #1c5660;
-  --player-bg: #0b0b1e;
-  --player-ink: #f2f2fb;
-  --player-line: #2f3160;
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 30%), 0 16px 40px -20px rgb(0 0 0 / 60%);
+[data-theme='dark'] {
+  --bg: #160f1f;
+  --surface: #211829;
+  --surface-sunken: #1b1324;
+  --line: #352a42;
+  --line-strong: #4d4060;
+  --ink: #f4f0f8;
+  --ink-soft: #c5bbd2;
+  --ink-faint: #a095b1;
+  --accent: #c6f135;
+  --accent-hover: #d6f96b;
+  --accent-text: #c6f135;
+  --on-accent: #1a1226;
+  --accent-soft: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  --risk-high: #ff6b72;
+  --risk-medium: #ffb224;
+  --risk-low: #3dd68c;
+  --risk-high-soft: color-mix(in srgb, var(--risk-high) 17%, var(--surface));
+  --risk-medium-soft: color-mix(in srgb, var(--risk-medium) 15%, var(--surface));
+  --risk-low-soft: color-mix(in srgb, var(--risk-low) 14%, var(--surface));
+  --mark-high: color-mix(in srgb, var(--risk-high) 34%, var(--surface));
+  --mark-medium: color-mix(in srgb, var(--risk-medium) 30%, var(--surface));
+  --mark-low: color-mix(in srgb, var(--risk-low) 28%, var(--surface));
+  --header-bg: color-mix(in srgb, var(--bg) 86%, transparent);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 30%), 0 14px 34px -22px rgb(0 0 0 / 70%);
   color-scheme: dark;
 }

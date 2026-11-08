@@ -11,14 +11,18 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from app import audio
+from app import audio, summary
 from app.config import REPO_ROOT, get_settings
-from app.gnani import tts
 from scripts.speechlike import SAMPLE_RATE, speech_like_pcm, write_wav
 
 OUTPUT = REPO_ROOT / "frontend" / "public" / "samples"
 GAP_SEC = 0.8
 PLACEHOLDER_BURSTS = [5.0, 5.0, 5.0, 5.0]
+REEL_FILTER = (
+    "color=c=0x160F1F:s=540x960:r=15[bg];"
+    "[0:a]showwaves=s=540x960:mode=cline:draw=full:rate=15:colors=0xC6F135,format=rgba[w];"
+    "[bg][w]overlay=shortest=1,format=yuv420p[v]"
+)
 
 SPOKEN_LINES: dict[str, list[str]] = {
     "sample_clean": [
@@ -49,7 +53,7 @@ async def timbre_wav(lines: list[str], folder: Path, name: str) -> Path:
     for index, line in enumerate(lines):
         mp3 = folder / f"{name}_{index}.mp3"
         wav = folder / f"{name}_{index}.wav"
-        mp3.write_bytes(await tts.speak(line, settings.gnani_tts_voice))
+        mp3.write_bytes(await summary.cached_speech(line, settings.gnani_tts_voice))
         await asyncio.to_thread(audio.extract_wav, mp3, wav)
         pcm += audio.read_pcm(wav) + silence
     target = folder / f"{name}.wav"
@@ -61,7 +65,7 @@ def render_reel(wav: Path, target: Path) -> None:
     command = [
         audio.ffmpeg_path(), "-y", "-v", "error", "-i", str(wav),
         "-filter_complex",
-        "[0:a]showwaves=s=540x960:mode=cline:rate=15:colors=0xF5A623,format=yuv420p[v]",
+        REEL_FILTER,
         "-map", "[v]", "-map", "0:a", "-c:v", "libx264", "-preset", "veryfast", "-crf", "30",
         "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", str(target),
     ]

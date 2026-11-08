@@ -12,6 +12,17 @@ export const isPlaceholderQuote = (flag: Flag) => flag.quote.startsWith('(')
 export const flagsInSegment = (segment: Segment, flags: Flag[]) =>
   flags.filter((flag) => !isPlaceholderQuote(flag) && flag.start_sec === segment.start_sec)
 
+export function markerFlags(flags: Flag[]): Flag[] {
+  const strongest = new Map<number, Flag>()
+  for (const flag of flags) {
+    const current = strongest.get(flag.start_sec)
+    if (!current || RANK[flag.severity] > RANK[current.severity]) {
+      strongest.set(flag.start_sec, flag)
+    }
+  }
+  return [...strongest.values()]
+}
+
 export function highlightParts(text: string, flags: Flag[]): TextPart[] {
   const lower = text.toLowerCase()
   const ranges = flags
