@@ -12,10 +12,10 @@ os.environ.update(
     LLM_BASE_URL="",
 )
 
-import pytest  # noqa: E402
-from fastapi.testclient import TestClient  # noqa: E402
+import pytest
+from fastapi.testclient import TestClient
 
-from app.main import app  # noqa: E402
+from app.main import app
 
 
 @pytest.fixture

@@ -19,7 +19,6 @@ dependencies = [
     "setuptools<81",
     "imageio-ffmpeg>=0.5",
     "indic-transliteration>=2.3",
-    "num2words>=0.5.13",
     "numpy>=1.26",
 ]
 

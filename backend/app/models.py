@@ -1,7 +1,8 @@
 from datetime import UTC, datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field as PydanticField
+from pydantic import BaseModel
+from pydantic import Field as PydanticField
 from sqlmodel import Field, SQLModel
 
 Severity = Literal["high", "medium", "low"]

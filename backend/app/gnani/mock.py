@@ -1,7 +1,6 @@
 import json
 import re
 import subprocess
-from pathlib import Path
 
 import imageio_ffmpeg
 
@@ -62,12 +61,12 @@ def speak(text: str, voice: str) -> bytes:
 
 
 def chat(messages: list[dict], json_schema: dict) -> dict:
-    prompt = messages[-1]["content"]
+    prompt = next(message["content"] for message in messages if message["role"] == "user")
     payload = json.loads(prompt[prompt.index("{"):])
     flags = []
     for segment in payload["segments"]:
         for trigger in LLM_TRIGGERS:
-            match = re.search(rf"[^,.]*{re.escape(trigger['phrase'])}[^,.]*", segment["text"], re.I)
+            match = re.search(rf"[^,.]*{re.escape(trigger['phrase'])}[^,.]*", segment["text"], re.IGNORECASE)
             if match:
                 details = {key: value for key, value in trigger.items() if key != "phrase"}
                 flags.append(
@@ -75,10 +74,6 @@ def chat(messages: list[dict], json_schema: dict) -> dict:
                 )
     rewrites = [
         {"flag_id": flag["id"], "suggested_rewrite": f"(Evon mock) {flag['suggested_fix']}"}
-        for flag in payload["already_flagged"]
+        for flag in payload["ALREADY_FLAGGED"]
     ]
     return {"flags": flags, "rewrites": rewrites}
-
-
-def write_mock_summary(path: Path, text: str, voice: str) -> None:
-    path.write_bytes(speak(text, voice))
