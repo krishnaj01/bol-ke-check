@@ -1,0 +1,88 @@
+# Patterns are case-insensitive. Roman patterns also match Devanagari speech, which is
+# romanised first. Every entry stays verified: false until an ASCI clause is added to source.
+
+disclosure:
+  # Share of the runtime within which a disclosure counts as early. Confirm against ASCI.
+  early_fraction: 0.3
+  patterns:
+    - "\\bspons[ao]r"
+    - "\\bpaid (partnership|promotion|collab|ad)"
+    - "\\bpartnership\\b"
+    - "\\bcollab"
+    - "\\badvertisement\\b"
+    - "\\bad hai\\b"
+    - "\\b(ye|yeh|is|this|an) .{0,12}\\bad\\b"
+    - "\\bvigyapan\\b"
+    - "\\bvijnapan\\b"
+    - "विज्ञापन"
+    - "प्रायोजित"
+
+keyterms:
+  - guaranteed
+  - गारंटी
+  - pakka
+  - sponsored
+  - paid partnership
+  - collab
+  - zero risk
+  - paisa double
+
+rules:
+  - id: DISC-MISSING-01
+    category: common
+    family: missing_disclosure
+    title: Paid collaboration not disclosed in speech
+    severity: high
+    layer: rule
+    patterns: []
+    explanation: This was marked as a paid collaboration, but no disclosure was heard in the audio.
+    suggested_fix: "Shuru mein hi bolein: 'Ye ek paid partnership hai [brand] ke saath.'"
+    source: null
+    verified: false
+
+  - id: DISC-LATE-01
+    category: common
+    family: missing_disclosure
+    title: Disclosure comes late in the video
+    severity: medium
+    layer: rule
+    patterns: []
+    explanation: A disclosure was heard, but only after the opening part of the video.
+    suggested_fix: Move the paid partnership line to the first few seconds.
+    source: null
+    verified: false
+
+  - id: COM-SUPER-01
+    category: common
+    family: superlatives
+    title: Number-one or best claim without proof
+    severity: medium
+    layer: rule
+    patterns:
+      - "\\bn[au]mb[ae]r (1|one|van|ek)\\b"
+      - "\\bsabse (best|accha|acha|achha|badhiya|sasta)\\b"
+      - "\\bworlds? best\\b"
+      - "\\b(duniya|india|bharat) (ka|ki|ke) (sabse )?best\\b"
+      - "सबसे अच्छा"
+    explanation: A superlative claim needs evidence that can be shown if challenged.
+    suggested_fix: Say what you personally liked instead of ranking it above all others.
+    source: null
+    verified: false
+
+  - id: COM-URGENCY-01
+    category: common
+    family: fake_urgency
+    title: Urgency without a stated end date
+    severity: low
+    layer: rule
+    patterns:
+      - "\\bsirf aa?j\\b"
+      - "\\boffer (khatam|khatm|end)"
+      - "\\bstock (khatam|khatm)"
+      - "\\blimited (time|stock|period)\\b"
+      - "\\blast chance\\b"
+      - "\\bjaldi (karo|order|kharido|buy)\\b"
+    explanation: Pressure to act now can mislead if there is no real, stated deadline.
+    suggested_fix: Give the actual end date of the offer, or drop the urgency.
+    source: null
+    verified: false

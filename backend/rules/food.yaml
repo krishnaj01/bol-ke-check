@@ -1,0 +1,43 @@
+rules:
+  - id: FD-HEALTH-01
+    category: food
+    family: guaranteed_results
+    title: Food health-benefit claim
+    severity: medium
+    layer: rule
+    patterns:
+      - "\\bimmunity .{0,20}(badh|boost|strong)"
+      - "\\b(wajan|weight) .{0,12}(kam|loss|ghat)"
+      - "\\bsugar (control|kam ho)"
+    explanation: Health benefits from a food product need substantiation.
+    suggested_fix: Talk about taste or ingredients rather than a health outcome.
+    source: null
+    verified: false
+
+  - id: FD-PURITY-01
+    category: food
+    family: guaranteed_results
+    title: Absolute purity claim
+    severity: medium
+    layer: rule
+    patterns:
+      - "100 ?(%|percent|pratishat)? ?(natural|pure|shudh|organic)"
+      - "\\bbilkul shudh\\b"
+    explanation: Absolute purity or natural claims need proof from the brand.
+    suggested_fix: Quote only what the brand's label states.
+    source: null
+    verified: false
+
+  - id: FD-EXPERT-01
+    category: food
+    family: unqualified_advice
+    title: Implied expert recommendation
+    severity: medium
+    layer: rule
+    patterns:
+      - "\\bdoctors? (recommend|bhi (kehte|bolte|recommend))"
+      - "\\bdietitians? (recommend|bhi (kehte|bolte))"
+    explanation: Claiming expert backing needs a real, verifiable source.
+    suggested_fix: Drop the expert reference, or name the actual study or source.
+    source: null
+    verified: false

@@ -1,0 +1,34 @@
+rules:
+  - id: BET-PROMO-01
+    category: betting
+    family: betting_promotion
+    title: Betting or gambling promotion
+    severity: high
+    layer: rule
+    patterns:
+      - "\\bpais[ae] (lagao|lagaiye|lagana)"
+      - "\\bbet(ting)? (lagao|laga|karo|app)"
+      - "\\bsatta\\b"
+      - "\\bcasino\\b"
+      - "\\b(jackpot|aviator)\\b"
+    explanation: Promoting betting or gambling carries serious regulatory risk.
+    suggested_fix: Remove the promotion. Betting content should not be published without legal review.
+    source: null
+    verified: false
+
+  - id: BET-WIN-01
+    category: betting
+    family: betting_promotion
+    title: Promise of winnings
+    severity: high
+    layer: rule
+    patterns:
+      - "\\bjeet pakki\\b"
+      - "\\bpakki jeet\\b"
+      - "\\b(rummy|teen patti|fantasy|ludo) .{0,30}(kamao|jeeto|jeet)"
+      - "\\bghar baithe .{0,20}kama"
+      - "\\b(daily|roz) .{0,12}(kamao|earning)"
+    explanation: Promising wins or easy income is misleading, because money can be lost.
+    suggested_fix: Remove any promise of winnings, and state the financial risk plainly.
+    source: null
+    verified: false

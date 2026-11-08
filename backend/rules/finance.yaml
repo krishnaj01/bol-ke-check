@@ -1,0 +1,50 @@
+rules:
+  - id: FIN-RETURNS-01
+    category: finance
+    family: assured_returns
+    title: Assured or guaranteed returns
+    severity: high
+    layer: rule
+    patterns:
+      - "\\bpais[ae] (double|dabal|dugna|doguna)"
+      - "\\bdouble (paisa|paise|return|money)"
+      - "g[ua]+r[ae]?nt[iy]d? (return|profit|income|munafa)"
+      - "\\b(fixed|assured|pakka) (return|profit|munafa|income)"
+      - "\\b\\d+ ?(%|percent) (return|profit) (pakka|fixed|assured|g[ua]+r[ae]?nt)"
+      - "गारंटी"
+    explanation: Investment returns cannot be promised, and market-linked products carry risk.
+    suggested_fix: "Kahein: 'Investment mein risk hota hai, returns guaranteed nahi hain.'"
+    source: null
+    verified: false
+
+  - id: FIN-NORISK-01
+    category: finance
+    family: assured_returns
+    title: No-risk investing claim
+    severity: high
+    layer: rule
+    patterns:
+      - "\\bz[ei]r[ou] risk\\b"
+      - "\\bno risk\\b"
+      - "\\brisk ?free\\b"
+      - "\\bkoi risk nahi+n?\\b"
+      - "\\bbilkul safe (investment|hai ye stock|stock)"
+    explanation: Describing an investment as free of risk is misleading.
+    suggested_fix: State plainly that investments carry risk and suggest reading the offer documents.
+    source: null
+    verified: false
+
+  - id: FIN-ADVICE-01
+    category: finance
+    family: unqualified_advice
+    title: Direct investment advice
+    severity: high
+    layer: rule
+    patterns:
+      - "\\b(ye|yeh|is|isi) (stock|share|coin|crypto|fund) .{0,12}(kharid|buy|le lo|me(in)? (lagao|dalo|invest))"
+      - "\\bstock (kharido|le lo|buy karo)\\b"
+      - "\\babhi invest karo\\b"
+    explanation: Telling viewers what to buy can require registration as an adviser.
+    suggested_fix: Share what you learned, without telling viewers to buy, and suggest a registered adviser.
+    source: null
+    verified: false

@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import get_settings
 from app.db import init_db
-from app.routes import checks
+from app.routes import checks, rules
 
 settings = get_settings()
 settings.media_dir.mkdir(parents=True, exist_ok=True)
@@ -27,6 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(checks.router)
+app.include_router(rules.router)
 app.mount("/media", StaticFiles(directory=settings.media_dir), name="media")
 
 

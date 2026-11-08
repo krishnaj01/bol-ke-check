@@ -15,7 +15,7 @@ SCRIPTS: dict[str, list[str]] = {
         "Offer sirf aaj ke liye hai, jaldi order karo",
     ],
     "sample_clean": [
-        "Is video mein paid partnership hai Lumi Skincare ke saath",
+        "Is video mein paid partnership hai DemoSkin ke saath",
         "Main ye moisturizer teen hafte se use kar rahi hoon",
         "Mujhe meri skin thodi soft lagi, aapka experience alag ho sakta hai",
         "Ingredients ki list description mein hai, patch test zaroor karna",
@@ -27,7 +27,7 @@ SCRIPTS: dict[str, list[str]] = {
         "Link bio mein hai, offer khatam hone wala hai",
     ],
     "sample_finance_claims": [
-        "Doston, ye sponsored video hai GrowFast app ke saath",
+        "Doston, ye sponsored video hai DemoFin app ke saath",
         "Is stock mein paisa double pakka, zero risk hai",
         "Main bata raha hoon ye stock kharido, guaranteed return milega",
         "Abhi app download karo, sirf aaj free demat account",

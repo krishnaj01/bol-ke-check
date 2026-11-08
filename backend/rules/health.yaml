@@ -1,0 +1,61 @@
+rules:
+  - id: HE-CURE-01
+    category: health
+    family: disease_cure
+    title: Disease cure claim
+    severity: high
+    layer: rule
+    patterns:
+      - "\\b(diabetes|dayabitij|sugar|bp|thyroid|cancer|pcod|pcos|arthritis|asthma|kidney stone) .{0,25}(thik|theek|cure|khatam|khatm|gayab|jad se)"
+      - "\\bjad se (khatam|khatm|thik|theek|mita)"
+      - "\\bpermanent (cure|ilaj)\\b"
+    explanation: Claiming that a product cures a disease is high risk and may be restricted by law.
+    suggested_fix: Remove the cure claim and suggest speaking to a qualified doctor.
+    source: null
+    verified: false
+
+  - id: HE-GUARANTEE-01
+    category: health
+    family: guaranteed_results
+    title: Guaranteed or time-bound health result
+    severity: high
+    layer: rule
+    patterns:
+      - "\\b(\\d+|ek|do|teen|char|panch|chhe|sat|aath|das|pandrah) (din|hafte|mahine) me(in)? .{0,40}(wajan|weight|kg|kilo|motapa|energy|thik|theek)"
+      - "g[ua]+r[ae]?nt[iy]d? (cure|ilaj|fayda|result|weight)"
+      - "100 ?(%|percent|pratishat)? ?(cure|ilaj|fayda|result)"
+      - "गारंटी"
+    explanation: Health outcomes vary and need substantiation before they can be promised.
+    suggested_fix: Describe your own routine, and say that results vary from person to person.
+    source: null
+    verified: false
+
+  - id: HE-ADVICE-01
+    category: health
+    family: unqualified_advice
+    title: Medical advice without credentials
+    severity: high
+    layer: rule
+    patterns:
+      - "\\bda[wv]a(i|yi)? (le|kha) ?l[ou]"
+      - "\\b(dawa|dawai|medicine) band kar"
+      - "\\bdoctor ki (zarurat|jarurat) nahi+n?"
+    explanation: Telling viewers what to take or stop taking is medical advice.
+    suggested_fix: "Kahein: 'Koi bhi dawa lene se pehle apne doctor se baat karein.'"
+    source: null
+    verified: false
+
+  - id: HE-SAFETY-01
+    category: health
+    family: guaranteed_results
+    title: Absolute safety claim
+    severity: medium
+    layer: rule
+    patterns:
+      - "\\bkoi side ?effect nahi+n?"
+      - "\\bzero side ?effect"
+      - "\\bno side ?effect"
+    explanation: A claim of no side effects is absolute and hard to substantiate.
+    suggested_fix: Mention that reactions can differ and suggest consulting a doctor.
+    source: null
+    verified: false

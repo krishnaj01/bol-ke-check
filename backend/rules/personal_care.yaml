@@ -1,0 +1,60 @@
+rules:
+  - id: PC-GUARANTEE-01
+    category: personal_care
+    family: guaranteed_results
+    title: Guaranteed or absolute result claim
+    severity: high
+    layer: rule
+    patterns:
+      - "g[ua]+r[ae]?nt[iy]d? (result|glow|fark|asar|fayda|effect)"
+      - "\\b(result|glow|fark|asar) (ki )?g[ua]+r[ae]?nt[iy]"
+      - "100 ?(%|percent|pratishat)? ?(result|effect|asar)"
+      - "pakka (result|fark|asar|glow)"
+      - "गारंटी"
+    explanation: Absolute outcome claims need substantiation, and results differ between people.
+    suggested_fix: Say results vary and describe your own experience.
+    source: null
+    verified: false
+
+  - id: PC-TIMEBOUND-01
+    category: personal_care
+    family: guaranteed_results
+    title: Time-bound result claim
+    severity: high
+    layer: rule
+    patterns:
+      - "\\b(\\d+|ek|do|teen|char|panch|chhe|sat|aath|das|pandrah) (din|hafte|mahine) me(in)? .{0,40}(glow|gora|gori|baal|result|fark|asar|pimple|dane)"
+    explanation: Promising a result within a fixed time needs substantiation.
+    suggested_fix: "Apna experience batayein: 'Mujhe kuch hafton mein fark laga, aapke results alag ho sakte hain.'"
+    source: null
+    verified: false
+
+  - id: PC-INSTANT-01
+    category: personal_care
+    family: guaranteed_results
+    title: Instant or overnight result claim
+    severity: high
+    layer: rule
+    patterns:
+      - "\\binstant (glow|result|gora|fair|whitening)"
+      - "\\bturant (asar|result|gora|glow|fark)"
+      - "\\bovernight (glow|result|fark)"
+      - "\\bek raat me(in)?\\b"
+    explanation: Instant-result claims are among the most common personal care violations.
+    suggested_fix: Describe a realistic routine and timeline, and say that results vary.
+    source: null
+    verified: false
+
+  - id: PC-FAIRNESS-01
+    category: personal_care
+    family: guaranteed_results
+    title: Skin-lightening result claim
+    severity: medium
+    layer: rule
+    patterns:
+      - "\\bgor[ai] (ban|ho) ?(ja|de|gi|ge|ga)"
+      - "\\brang saaf\\b"
+    explanation: Claims about changing skin tone are a sensitive and high-risk area.
+    suggested_fix: Talk about skin feel or hydration rather than a change in skin tone.
+    source: null
+    verified: false
