@@ -245,3 +245,20 @@ def test_unknown_audio_language_is_rejected(client: TestClient, speech_wav: Path
         data={"language": "ta-IN"},
     )
     assert response.status_code == 422
+
+
+ground_segment = Segment(id="s2", start_sec=4.0, end_sec=8.0, text="मेरे CA भैया ने खुद अपना पैसा इसी app में डाला है।")
+
+
+def test_quote_in_another_script_is_replaced_by_the_spoken_line() -> None:
+    quote = "Mere CA bhayya ne khud apna paisa isi app mein daala hai"
+    assert review._ground_quote(quote, ground_segment) == "मेरे CA भैया ने खुद अपना पैसा इसी app में डाला है"
+
+
+def test_quote_from_elsewhere_is_rejected() -> None:
+    assert review._ground_quote("उनकी पुरानी खाँसी एक हफ्ते में चली गई", ground_segment) is None
+
+
+def test_rewrite_that_still_breaks_a_rule_is_rejected() -> None:
+    assert not review._is_safe_rewrite("इससे diabetes ठीक हो जाएगा।", "health")
+    assert review._is_safe_rewrite("मुझे यह पसंद आया, पर doctor से पूछ लीजिए।", "health")

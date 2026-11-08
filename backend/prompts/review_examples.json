@@ -1,0 +1,121 @@
+[
+  {
+    "input": {
+      "category": "personal_care",
+      "brand": null,
+      "ALREADY_FLAGGED": [
+        {
+          "id": "f1",
+          "family": "guaranteed_results",
+          "quote": "पक्का result",
+          "suggested_fix": "Remove the guarantee and describe your own experience."
+        }
+      ],
+      "segments": [
+        {
+          "id": "s1",
+          "start_sec": 0.0,
+          "end_sec": 3.5,
+          "text": "इस hair oil से पक्का result मिलेगा।"
+        },
+        {
+          "id": "s2",
+          "start_sec": 4.0,
+          "end_sec": 7.5,
+          "text": "एक senior trichologist ने मुझे कहा कि इसका कोई side effect नहीं है।"
+        },
+        {
+          "id": "s3",
+          "start_sec": 8.0,
+          "end_sec": 11.5,
+          "text": "मेरा favourite color green है।"
+        }
+      ]
+    },
+    "output": {
+      "flags": [
+        {
+          "segment_id": "s2",
+          "family": "unqualified_advice",
+          "severity": "high",
+          "quote": "एक senior trichologist ने मुझे कहा कि इसका कोई side effect नहीं है",
+          "explanation": "Implies expert backing and absolute safety with no named, qualified source.",
+          "suggested_rewrite": "मुझे यह suit किया, पर पहले patch test ज़रूर कर लीजिए।",
+          "confidence": 0.85
+        }
+      ],
+      "rewrites": [
+        {
+          "flag_id": "f1",
+          "suggested_rewrite": "मुझे यह अच्छा लगा, पर results सबके अलग हो सकते हैं।"
+        }
+      ]
+    }
+  },
+  {
+    "input": {
+      "category": "general",
+      "brand": null,
+      "ALREADY_FLAGGED": [],
+      "segments": [
+        {
+          "id": "s1",
+          "start_sec": 0.0,
+          "end_sec": 3.5,
+          "text": "यह video एक shoe brand के साथ paid collab है।"
+        },
+        {
+          "id": "s2",
+          "start_sec": 4.0,
+          "end_sec": 7.5,
+          "text": "मुझे इनका comfort पसंद आया।"
+        },
+        {
+          "id": "s3",
+          "start_sec": 8.0,
+          "end_sec": 11.5,
+          "text": "मेरे घर के पास एक नई दुकान खुली है।"
+        }
+      ]
+    },
+    "output": {
+      "flags": [],
+      "rewrites": []
+    }
+  },
+  {
+    "input": {
+      "category": "health",
+      "brand": null,
+      "ALREADY_FLAGGED": [],
+      "segments": [
+        {
+          "id": "s1",
+          "start_sec": 0.0,
+          "end_sec": 3.5,
+          "text": "यह kadha मेरे चाचा रोज़ पीते हैं।"
+        },
+        {
+          "id": "s2",
+          "start_sec": 4.0,
+          "end_sec": 7.5,
+          "text": "उनकी पुरानी खाँसी एक हफ्ते में चली गई।"
+        }
+      ]
+    },
+    "output": {
+      "flags": [
+        {
+          "segment_id": "s2",
+          "family": "disease_cure",
+          "severity": "high",
+          "quote": "उनकी पुरानी खाँसी एक हफ्ते में चली गई",
+          "explanation": "A personal story that implies the product cures an illness in a set time.",
+          "suggested_rewrite": "मेरे चाचा को यह पसंद है, पर तबीयत खराब हो तो doctor से मिलिए।",
+          "confidence": 0.8
+        }
+      ],
+      "rewrites": []
+    }
+  }
+]

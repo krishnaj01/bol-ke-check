@@ -1,19 +1,30 @@
 import json
 import logging
+import unicodedata
 from dataclasses import dataclass
+from difflib import SequenceMatcher
 from pathlib import Path
 
 from pydantic import BaseModel, Field, ValidationError
 
+from app import rules_engine
 from app.config import BACKEND_ROOT, get_settings
 from app.gnani import GnaniError, llm
 from app.models import Flag, Segment, Severity
-from app.rules_engine import FAMILIES
+from app.rules_engine import FAMILIES, fold_token
 
 logger = logging.getLogger(__name__)
 
 SYSTEM_PROMPT_PATH: Path = BACKEND_ROOT / "prompts" / "review.md"
+EXAMPLES_PATH: Path = BACKEND_ROOT / "prompts" / "review_examples.json"
+INSTRUCTIONS = (
+    "Return new flags under 'flags'. Also return one safer line under 'rewrites' "
+    "for each ALREADY_FLAGGED item, using its id as flag_id.\n"
+)
 MAX_WORDS_PER_CHUNK = 3000
+QUOTE_MATCH_MIN = 0.8
+MIN_MATCH_RUN = 3
+REWRITE_FALLBACK = "Rephrase this as your own experience, without promising an outcome."
 
 
 class EvonFlag(BaseModel):
@@ -55,6 +66,21 @@ def chunk_segments(segments: list[Segment]) -> list[list[Segment]]:
     return chunks
 
 
+def _example_turns() -> list[dict]:
+    turns: list[dict] = []
+    for example in json.loads(EXAMPLES_PATH.read_text(encoding="utf-8")):
+        turns.append(
+            {
+                "role": "user",
+                "content": INSTRUCTIONS + json.dumps(example["input"], ensure_ascii=False),
+            }
+        )
+        turns.append(
+            {"role": "assistant", "content": json.dumps(example["output"], ensure_ascii=False)}
+        )
+    return turns
+
+
 def _build_messages(
     segments: list[Segment], category: str, brand: str | None, rule_flags: list[Flag]
 ) -> list[dict]:
@@ -73,13 +99,10 @@ def _build_messages(
         ],
         "segments": [segment.model_dump() for segment in segments],
     }
-    instructions = (
-        "Return new flags under 'flags'. Also return one safer line under 'rewrites' "
-        "for each ALREADY_FLAGGED item, using its id as flag_id.\n"
-    )
     return [
         {"role": "system", "content": SYSTEM_PROMPT_PATH.read_text(encoding="utf-8")},
-        {"role": "user", "content": instructions + json.dumps(payload, ensure_ascii=False)},
+        *_example_turns(),
+        {"role": "user", "content": INSTRUCTIONS + json.dumps(payload, ensure_ascii=False)},
     ]
 
 
@@ -100,14 +123,39 @@ def _squash(text: str) -> str:
     return " ".join(text.split()).casefold()
 
 
-def _accept(flag: EvonFlag, segment: Segment | None, rule_flags: list[Flag]) -> bool:
-    if segment is None or flag.family not in FAMILIES:
+def _fold(text: str) -> str:
+    return " ".join(fold_token(token) for token in unicodedata.normalize("NFC", text).split())
+
+
+def _ground_quote(quote: str, segment: Segment) -> str | None:
+    """Return text that was really spoken, or None if the quote is not from this segment.
+
+    Evon sometimes re-scripts or garbles a quote, so compare in the folded Roman view and show the
+    transcript's own line rather than Evon's spelling.
+    """
+    if not quote.strip():
+        return None
+    if _squash(quote) in _squash(segment.text):
+        return quote
+    folded = _fold(quote)
+    blocks = SequenceMatcher(None, folded, _fold(segment.text), autojunk=False).get_matching_blocks()
+    matched = sum(block.size for block in blocks if block.size >= MIN_MATCH_RUN)
+    if folded and matched / len(folded) >= QUOTE_MATCH_MIN:
+        return segment.text.strip().rstrip("।.!?")
+    return None
+
+
+def _is_safe_rewrite(text: str, category: str) -> bool:
+    if not text.strip():
         return False
-    if flag.confidence < get_settings().llm_min_confidence:
+    probe = Segment(id="probe", start_sec=0, end_sec=1, text=text)
+    return not rules_engine.scan([probe], category, False, 1.0).flags
+
+
+def _accept(flag: EvonFlag, quote: str, segment: Segment, rule_flags: list[Flag]) -> bool:
+    if flag.family not in FAMILIES or flag.confidence < get_settings().llm_min_confidence:
         return False
-    quote = _squash(flag.quote)
-    if not quote or quote not in _squash(segment.text):
-        return False
+    quote = _squash(quote)
     return not any(
         existing.start_sec == segment.start_sec
         and (
@@ -146,12 +194,20 @@ async def review_transcript(
         for chunk in chunk_segments(segments):
             reply = await _ask_evon(_build_messages(chunk, category, brand, rule_flags))
             for rewrite in reply.rewrites:
-                if rewrite.flag_id in rule_by_id and rewrite.suggested_rewrite.strip():
+                if rewrite.flag_id in rule_by_id and _is_safe_rewrite(
+                    rewrite.suggested_rewrite, category
+                ):
                     rule_by_id[rewrite.flag_id].suggested_rewrite = rewrite.suggested_rewrite
             for candidate in reply.flags:
                 segment = by_id.get(candidate.segment_id)
-                if _accept(candidate, segment, rule_flags):
-                    flags.append(_to_flag(candidate, segment, f"f{len(flags) + 1}"))
+                quote = _ground_quote(candidate.quote, segment) if segment else None
+                if quote is None or not _accept(candidate, quote, segment, rule_flags):
+                    continue
+                rewrite = candidate.suggested_rewrite
+                if not _is_safe_rewrite(rewrite, category):
+                    rewrite = REWRITE_FALLBACK
+                grounded = candidate.model_copy(update={"quote": quote, "suggested_rewrite": rewrite})
+                flags.append(_to_flag(grounded, segment, f"f{len(flags) + 1}"))
     except (GnaniError, ValidationError, ValueError) as error:
         logger.warning("Evon layer unavailable, using rule results only: %s", error)
         return ReviewOutcome(flags=[flag.model_copy() for flag in rule_flags], partial=True)

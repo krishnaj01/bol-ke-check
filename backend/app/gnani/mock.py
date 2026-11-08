@@ -61,7 +61,11 @@ def speak(text: str, voice: str) -> bytes:
 
 
 def chat(messages: list[dict], json_schema: dict) -> dict:
-    prompt = next(message["content"] for message in messages if message["role"] == "user")
+    prompt = next(
+        message["content"]
+        for message in reversed(messages)
+        if message["role"] == "user" and '"segments"' in message["content"]
+    )
     payload = json.loads(prompt[prompt.index("{"):])
     flags = []
     for segment in payload["segments"]:
