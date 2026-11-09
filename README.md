@@ -4,10 +4,10 @@ Upload a draft reel and get every risky spoken Hinglish claim with its timestamp
 breaks and a safer line to say instead, before you post. Built on Gnani Prisma (speech to text),
 Gnani Evon (LLM) and Gnani Timbre (text to speech).
 
-**This is an automated pre-check, not legal advice.** Every rule is marked `verified: false` and
-shows "Pending review" until its ASCI clause has been added as a source.
+**This is an automated pre-check, not legal advice.** Each rule cites the ASCI clause behind it.
+Rules that a clause only partly supports stay `verified: false` and show "Pending review".
 
-The full specification is in [SPEC.md](SPEC.md).
+See the one-page [solution pitch](PITCH.md). The full specification is in [SPEC.md](SPEC.md).
 
 ## Run it
 
