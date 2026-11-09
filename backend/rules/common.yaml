@@ -1,8 +1,11 @@
 # Patterns are case-insensitive. Roman patterns also match Devanagari speech, which is
-# romanised first. Every entry stays verified: false until an ASCI clause is added to source.
+# romanised first. verified: true means the quoted ASCI clause directly supports the rule; 'Partial:'
+# sources stay verified: false and say what is missing. Clauses read from:
+# https://www.ascionline.in/wp-content/uploads/guidelines/ASCI_Codes_Guidelines_Book.pdf
+# https://www.ascionline.in/social/wp-content/uploads/2025/04/ASCI-Influencer-Guidelines.pdf
 
 disclosure:
-  # Share of the runtime within which a disclosure counts as early. Confirm against ASCI.
+  # Share of the runtime within which a disclosure counts as early. ASCI says "upfront" with no figure.
   early_fraction: 0.3
   patterns:
     - "\\bspons[ao]r"
@@ -12,6 +15,9 @@ disclosure:
     - "\\badvertisement\\b"
     - "\\bad hai\\b"
     - "\\b(ye|yeh|is|this|an) .{0,12}\\bad\\b"
+    - "\\bfree gift\\b"
+    - "\\baffiliate\\b"
+    - "\\bemployee\\b"
     - "\\bvigyapan\\b"
     - "\\bvijnapan\\b"
     - "विज्ञापन"
@@ -35,10 +41,10 @@ rules:
     severity: high
     layer: rule
     patterns: []
-    explanation: This was marked as a paid collaboration, but no disclosure was heard in the audio.
+    explanation: This was marked as a paid collaboration, but no disclosure was heard in the audio. ASCI also accepts a clear on-screen label, which this check cannot see.
     suggested_fix: "Shuru mein hi bolein: 'Ye ek paid partnership hai [brand] ke saath.'"
-    source: null
-    verified: false
+    source: "ASCI Influencer Guidelines s.1: ads \"must carry a disclosure label that clearly identifies it as an advertisement\"; s.1.1 applies this to any material connection."
+    verified: true
 
   - id: DISC-LATE-01
     category: common
@@ -49,7 +55,7 @@ rules:
     patterns: []
     explanation: A disclosure was heard, but only after the opening part of the video.
     suggested_fix: Move the paid partnership line to the first few seconds.
-    source: null
+    source: "Partial: ASCI Influencer Guidelines s.1.2 requires disclosure to be \"upfront and prominent\" and says labels at the end of videos are likely to be missed. ASCI sets no percentage; the 30% cut-off is this tool's own."
     verified: false
 
   - id: COM-SUPER-01
@@ -66,8 +72,8 @@ rules:
       - "सबसे अच्छा"
     explanation: A superlative claim needs evidence that can be shown if challenged.
     suggested_fix: Say what you personally liked instead of ranking it above all others.
-    source: null
-    verified: false
+    source: "ASCI Code Ch. I cl. 1.1: claims of \"objectively ascertainable fact, should be capable of substantiation\". Obvious hyperbole is allowed under cl. 1.6."
+    verified: true
 
   - id: COM-URGENCY-01
     category: common
@@ -84,5 +90,5 @@ rules:
       - "\\bjaldi (karo|order|kharido|buy)\\b"
     explanation: Pressure to act now can mislead if there is no real, stated deadline.
     suggested_fix: Give the actual end date of the offer, or drop the urgency.
-    source: null
+    source: "Partial: ASCI Deceptive Design Patterns Guidelines, item 3 (False Urgency) covers implying quantities are \"more limited than they actually are\". ASCI does not require a stated end date, which this rule looks for."
     verified: false

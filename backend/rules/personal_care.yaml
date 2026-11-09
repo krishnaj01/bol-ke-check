@@ -13,8 +13,8 @@ rules:
       - "गारंटी"
     explanation: Absolute outcome claims need substantiation, and results differ between people.
     suggested_fix: Say results vary and describe your own experience.
-    source: null
-    verified: false
+    source: "ASCI Code Ch. I cl. 1.1 (substantiation) and cl. 1.5: no claim \"so exaggerated as to lead to grave or widespread disappointment\"."
+    verified: true
 
   - id: PC-TIMEBOUND-01
     category: personal_care
@@ -26,8 +26,8 @@ rules:
       - "\\b(\\d+|ek|do|teen|char|panch|chhe|sat|aath|das|pandrah) (din|hafte|mahine) me(in)? .{0,40}(glow|gora|gori|baal|result|fark|asar|pimple|dane)"
     explanation: Promising a result within a fixed time needs substantiation.
     suggested_fix: "Apna experience batayein: 'Mujhe kuch hafton mein fark laga, aapke results alag ho sakte hain.'"
-    source: null
-    verified: false
+    source: "ASCI Code Ch. I cl. 1.1: claims of \"objectively ascertainable fact, should be capable of substantiation\"."
+    verified: true
 
   - id: PC-INSTANT-01
     category: personal_care
@@ -40,10 +40,10 @@ rules:
       - "\\bturant (asar|result|gora|glow|fark)"
       - "\\bovernight (glow|result|fark)"
       - "\\bek raat me(in)?\\b"
-    explanation: Instant-result claims are among the most common personal care violations.
+    explanation: An instant-result claim needs substantiation, and results differ between people.
     suggested_fix: Describe a realistic routine and timeline, and say that results vary.
-    source: null
-    verified: false
+    source: "ASCI Code Ch. I cl. 1.1 (substantiation) and cl. 1.5 on exaggerated claims."
+    verified: true
 
   - id: PC-FAIRNESS-01
     category: personal_care
@@ -56,5 +56,5 @@ rules:
       - "\\brang saaf\\b"
     explanation: Claims about changing skin tone are a sensitive and high-risk area.
     suggested_fix: Talk about skin feel or hydration rather than a change in skin tone.
-    source: null
+    source: "Partial: ASCI Skin Lightening or Fairness Guidelines restrict portraying darker skin as inferior. They do not ban claims about changing skin tone, which this rule flags; such claims still need substantiation under Code cl. 1.1."
     verified: false

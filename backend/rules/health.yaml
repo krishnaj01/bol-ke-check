@@ -11,8 +11,8 @@ rules:
       - "\\bpermanent (cure|ilaj)\\b"
     explanation: Claiming that a product cures a disease is high risk and may be restricted by law.
     suggested_fix: Remove the cure claim and suggest speaking to a qualified doctor.
-    source: null
-    verified: false
+    source: "ASCI Influencer Guidelines, Addendum 2 (17 Aug 2023) I(b): claims of \"prevention, treatment, cure, remedy for medical conditions\" need relevant qualifications; ASCI Code Ch. I cl. 1.5(d)."
+    verified: true
 
   - id: HE-GUARANTEE-01
     category: health
@@ -27,8 +27,8 @@ rules:
       - "गारंटी"
     explanation: Health outcomes vary and need substantiation before they can be promised.
     suggested_fix: Describe your own routine, and say that results vary from person to person.
-    source: null
-    verified: false
+    source: "ASCI Code Ch. I cl. 1.5(d): claims on illness, obesity and similar must not exceed prudent medical practice \"and the actual efficacy of the product\"."
+    verified: true
 
   - id: HE-ADVICE-01
     category: health
@@ -42,8 +42,8 @@ rules:
       - "\\bdoctor ki (zarurat|jarurat) nahi+n?"
     explanation: Telling viewers what to take or stop taking is medical advice.
     suggested_fix: "Kahein: 'Koi bhi dawa lene se pehle apne doctor se baat karein.'"
-    source: null
-    verified: false
+    source: "ASCI Influencer Guidelines, Addendum 2 (17 Aug 2023) s.2: health and nutrition posts need \"relevant qualifications such as a medical degree\", depending on the advice given."
+    verified: true
 
   - id: HE-SAFETY-01
     category: health
@@ -57,5 +57,5 @@ rules:
       - "\\bno side ?effect"
     explanation: A claim of no side effects is absolute and hard to substantiate.
     suggested_fix: Mention that reactions can differ and suggest consulting a doctor.
-    source: null
-    verified: false
+    source: "ASCI Code Ch. I cl. 1.1 (substantiation) and cl. 1.4: ads shall not mislead \"by implication or by omission or by ambiguity or by exaggeration\"."
+    verified: true

@@ -13,7 +13,7 @@ rules:
       - "\\b(jackpot|aviator)\\b"
     explanation: Promoting betting or gambling carries serious regulatory risk.
     suggested_fix: Remove the promotion. Betting content should not be published without legal review.
-    source: null
+    source: "Partial: ASCI Code Ch. III cl. 3.5 bars ads for products \"banned under the law\", so this depends on the legal status of the specific product, which needs a lawyer to confirm."
     verified: false
 
   - id: BET-WIN-01
@@ -30,5 +30,5 @@ rules:
       - "\\b(daily|roz) .{0,12}(kamao|earning)"
     explanation: Promising wins or easy income is misleading, because money can be lost.
     suggested_fix: Remove any promise of winnings, and state the financial risk plainly.
-    source: null
-    verified: false
+    source: "ASCI Code Ch. I cl. 1.4: ads shall not mislead \"by implication or by omission or by ambiguity or by exaggeration\"."
+    verified: true

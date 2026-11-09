@@ -14,8 +14,8 @@ rules:
       - "गारंटी"
     explanation: Investment returns cannot be promised, and market-linked products carry risk.
     suggested_fix: "Kahein: 'Investment mein risk hota hai, returns guaranteed nahi hain.'"
-    source: null
-    verified: false
+    source: "ASCI Code Ch. I cl. 1.5(e): investment ads \"shall not contain statements which may mislead the consumer in respect of the security offered, rates of return\"."
+    verified: true
 
   - id: FIN-NORISK-01
     category: finance
@@ -31,8 +31,8 @@ rules:
       - "\\bbilkul safe (investment|hai ye stock|stock)"
     explanation: Describing an investment as free of risk is misleading.
     suggested_fix: State plainly that investments carry risk and suggest reading the offer documents.
-    source: null
-    verified: false
+    source: "ASCI Code Ch. I cl. 1.5(e) on misleading statements about security offered; ASCI Influencer Guidelines, Addendum 2 (17 Aug 2023) I(a) on claims about \"growth, safety, security, returns\"."
+    verified: true
 
   - id: FIN-ADVICE-01
     category: finance
@@ -46,5 +46,5 @@ rules:
       - "\\babhi invest karo\\b"
     explanation: Telling viewers what to buy can require registration as an adviser.
     suggested_fix: Share what you learned, without telling viewers to buy, and suggest a registered adviser.
-    source: null
-    verified: false
+    source: "ASCI Influencer Guidelines, Addendum 2 (17 Aug 2023) I.1: influencers on stock or investments \"should be registered with SEBI\" and state the registration number."
+    verified: true

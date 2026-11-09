@@ -140,9 +140,9 @@ def test_devanagari_disclosure_counts() -> None:
 
 
 @pytest.mark.parametrize("category", CATEGORIES)
-def test_all_rules_pending_review_until_sources_added(category: str) -> None:
+def test_every_rule_cites_a_source_and_partial_ones_stay_unverified(category: str) -> None:
     for rule in engine.rules_for(category):
-        assert rule.verified is False and rule.source is None
+        assert rule.source and (rule.verified or rule.source.startswith("Partial:"))
         assert rule.family in engine.FAMILIES
 
 

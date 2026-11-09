@@ -11,8 +11,8 @@ rules:
       - "\\bsugar (control|kam ho)"
     explanation: Health benefits from a food product need substantiation.
     suggested_fix: Talk about taste or ingredients rather than a health outcome.
-    source: null
-    verified: false
+    source: "ASCI Food & Beverages Guidelines, item 2: health or nutritional claims \"shall be supported by appropriate scientific evidence\"."
+    verified: true
 
   - id: FD-PURITY-01
     category: food
@@ -25,8 +25,8 @@ rules:
       - "\\bbilkul shudh\\b"
     explanation: Absolute purity or natural claims need proof from the brand.
     suggested_fix: Quote only what the brand's label states.
-    source: null
-    verified: false
+    source: "ASCI Code Ch. I cl. 1.1 (substantiation); ASCI Food & Beverages Guidelines, item 8: claims should not be inconsistent with the label or packaging."
+    verified: true
 
   - id: FD-EXPERT-01
     category: food
@@ -39,5 +39,5 @@ rules:
       - "\\bdietitians? (recommend|bhi (kehte|bolte))"
     explanation: Claiming expert backing needs a real, verifiable source.
     suggested_fix: Drop the expert reference, or name the actual study or source.
-    source: null
-    verified: false
+    source: "ASCI Food & Beverages Guidelines, item 9: no implied endorsement by a professional body or \"individual in a particular profession\" unless consented, current, verifiable and named."
+    verified: true
